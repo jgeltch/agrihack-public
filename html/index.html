@@ -1,0 +1,132 @@
+
+<html>
+  <head>
+    <style>#menuul  { list-style-type: none; margin: 0; padding: 0; background-color: #4b2f77; overflow: hidden; }
+#menuul li { float: left; }
+#menuul li a img { text-align: center; }
+#menuul li a { display: block; color: b2cd66; text-align: center; padding: 14px 16px; text-decoration: none; }
+#menuul li a:hover { background-color: #34185d; }
+.clearfix.after { content: ; display: table; }
+
+    </style>
+    <meta charset='utf-8' />
+    <script src='js/loading-bar.js'></script>
+    <link rel='stylesheet' href='js/loading-bar.css' />
+    <script type='text/javascript'>
+// Start agrihack
+
+function id(X) {
+    return X;
+}
+
+function httpGet(theUrl, callback) {
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.onreadystatechange = function() { 
+        if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+            callback(xmlHttp.responseText);
+    }
+    xmlHttp.open("GET", theUrl, true); // true for asynchronous 
+    xmlHttp.send(null);
+}
+
+templist = [];
+
+humidlist = [];
+Arr = []
+function make_bar(width) {
+    return "<div id='mybar' style='width:" + width + "% />" +
+	width + '%' + "</div>";
+}
+
+function normalise(obj) {
+    humid = obj.humidity;
+    temp = obj.temp;
+    var nom_h = humid;
+    var nom_t = temp ;
+    var floor = Math.floor;
+    return [nom_h,nom_t];
+}
+
+function move(startwidth, bar) {
+    var elem = document.getElementById(bar);
+    elem.ldBar.set(startwidth);
+} 
+
+var url = "http://172.31.255.248/rawdata";
+
+function loop() {
+    var fun = function(string) {
+	json = string;
+	var Obj = JSON.parse(string);
+	Arr = normalise(Obj);
+	move(Arr[0], "tempbar");
+	move(Arr[1], "humidbar");
+    }
+    //httpGet("http://www.wildbartty.com/cgi-bin/agrihack.cgi", fun);
+    httpGet("http://172.31.255.246/rawdata", fun);
+}
+
+    </script>
+  </head>
+  <body>
+<ul id='menuul'>
+  <li>
+    <a href='index.html'>Status
+    </a>
+  </li>
+  <li>
+    <a href='conf.html'>Configure
+    </a>
+  </li>
+</ul>
+<table>
+  <tr>
+    <ti>
+      <h1>Humidity
+      </h1>
+      <div id='myprogress'>
+        <style>
+ #tempbar .ldBar-label { 
+color:red
+font-size: 30px;
+ -webkit-text-stroke: black;
+   text-shadow:
+        3px 3px 0 #666,
+      -1px -1px 0 #666,  
+       1px -1px 0 #666,
+       -1px 1px 0 #666,
+        1px 1px 0 #666;
+ }
+ #tempbar .ldBar-label:after { content: "%"}
+ 
+        </style>
+        <div id='tempbar' class='ldBar label-center' style='width: 50%; height: 50%;  color:black; font-size:30px' data-preset='bubble' data-value='50%' data-pattern-size='20'></div>
+      </div>
+    </ti>
+  </tr>
+  <ti>
+    <h1>Temperature
+    </h1>
+    <div>
+      <div id='myprogress'>
+        <style>
+#humidbar .ldBar-label:after { content: "C"}
+#humidbar .ldBar-label { color:black;
+text-align:center;
+color:black;
+font-size: 30px};
+ .ldBar-label:after { content: "C"};
+
+        </style>
+        <div id='humidbar' class='ldBar label-center' style='width: 50%; height:
+				       20%; text-color:black;' data-preset='energy'></div>
+      </div>
+    </div>
+  </ti>
+</table>
+<script>
+loop();
+ setInterval(loop, 2000) ;
+</script>
+  </body>
+</html>

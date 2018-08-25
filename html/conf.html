@@ -1,0 +1,55 @@
+
+<html>
+  <head>
+    <style>#menuul  { list-style-type: none; margin: 0; padding: 0; background-color: #4b2f77; overflow: hidden; }
+#menuul li { float: left; }
+#menuul li a img { text-align: center; }
+#menuul li a { display: block; color: b2cd66; text-align: center; padding: 14px 16px; text-decoration: none; }
+#menuul li a:hover { background-color: #34185d; }
+.clearfix.after { content: ; display: table; }
+
+    </style>
+    <meta charset='utf-8' />
+    <script src='js/loading-bar.js'></script>
+    <link rel='stylesheet' href='js/loading-bar.css' />
+    <script type='text/javascript'>var data;
+
+function stuffdata(key) {
+    data.append(key, document.getElementById(key).value ?
+		document.getElementById(key).value : -1) ;
+}
+
+function send() {
+
+    data = new FormData();
+    
+    stuffdata("hitemp");
+    stuffdata("lowtemp");
+    stuffdata("besttemp");
+    stuffdata("hihumid");
+    stuffdata("lowhumid");
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', 'http://172.31.255.248/esp', true);
+    xhr.onload = function () {
+	// do something to response
+	console.log(data);
+    };
+    xhr.send(data);
+}
+
+    </script>
+  </head>
+  <body>
+<ul id='menuul'>
+  <li>
+    <a href='index.html'>Status
+    </a>
+  </li>
+  <li>
+    <a href='conf.html'>Configure
+    </a>
+  </li>
+</ul><div><style id='form'>form {text-align: left}</style><br /><input id='hitemp'>Max Temp (C)</input><br /><input id='besttemp'>Target Temp (C)</input><br /><input id='lowtemp'>Min Temp (C)</input><br /><input id='lowhumid'>Min Humidity</input><br /><input id='hihumid'>Max Humidity</input><br /><button onclick='send()'>Submit</button></div>
+  </body>
+</html>
